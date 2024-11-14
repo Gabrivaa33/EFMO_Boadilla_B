@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale: 1.0">
+  <title>Fantasy EFMO</title>
+  <style>
+    body {
+      background-color: rgb(245, 255, 255);
+      font-family: Arial, sans-serif; }
+    .container { max-width: 1200px;}
+    table {
+      width: 100%; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    .total { background-color: #f0f0f0; font-weight: bold; }
+    .media { background-color: #e0e0e0; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Puntos y valoración de los partidos temp. 24/25</h1>
+  <table>
+    <thead>
+    <tr>
+      <th>Jornada</th>
+      <th colspan="2">Edu</th>
+      <th colspan="2">Miguel</th>
+      <th colspan="2">Rodri</th>
+      <th colspan="2">Pablo</th>
+      <th colspan="2">Lucas S.</th>
+      <th colspan="2">Yago</th>
+      <th colspan="2">Alonso</th>
+      <th colspan="2">Nico</th>
+      <th colspan="2">Javi</th>
+      <th colspan="2">Diego</th>
+      <th colspan="2">Numan</th>
+      <th colspan="2">Gonzalo</th>
+      <th colspan="2">Leo</th>
+      <th colspan="2">Unai (A7A)</th>
+      <th colspan="2">Íñigo</th>
+      <th colspan="2">Lucas G.</th>
+      <th colspan="2">Hugo</th>
+      <th colspan="2">Mario</th>
+      <th colspan="2">David (A7A)</th>
+      <th colspan="2">Lucas O.</th>
+      <th colspan="2">Jorge</th>
+    </tr>
+    <tr>
+      <th></th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+      <th>Puntos</th>
+      <th>···································</th>
+    </tr>
+    </thead>
+    <tbody id="tablaJornadas"></tbody>
+    <tfoot>
+    <tr class="total">
+      <td><strong>Total</strong></td>
+      <td></td><td></td>
+    </tr>
+    <tr class="media">
+      <td><strong>Media</strong></td>
+      <td></td><td></td>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<script>
+  // Datos predefinidos para 30 jornadas y 20 jugadores con comentarios
+  const jugadores = [
+    { nombre: "Jugador 1"/*Edu*/, puntos: [null, 5, 5, 6, 3, null, null, null, null], comentarios: ["No convocado", "↩️ (7,1)", "↪️ (7,1)", "↩️ (7,3)", "↩️ (6,6)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 2"/*Miguel*/, puntos: [4, 5, 6, 6, 4, null, null, null, null], comentarios: ["(6,8)", "↪️ (7,0)", "↩️ (7,2)", "↪️ (7,2)", "↪️ (6,9)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 3"/*Rodri*/, puntos: [null, null, null, null, null, null, null, null, null], comentarios: ["-", "No convocado", "No convocado", "No convocado", "No convocado", "-", "-", "-", "-"] },
+    { nombre: "Jugador 4"/*Pablo*/, puntos: [5, 7, 10, 3, 4, null, null, null, null], comentarios: ["↪️ (7,1)", "(7,4)", "↪️↩️ (8,1)", "(6,7)", "(6,9)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 5"/*Lucas S.*/, puntos: [4, 6, 5, 6, 12, null, null, null, null], comentarios: ["(6,8)", "(7,2)", "↪️ (7,0)", "↪️↩️ (7,3)", "🟨🟢↪️↩️ (7,4+🟢)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 6"/*Yago*/, puntos: [4, 5, 3, 5, 3, null, null, null, null], comentarios: ["🟨↩️ (6,9)", "(7,0)", "↪️↩️ (6,7)", "↪️↩️ (7,1)", "↪️↩️ (6,7)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 7"/*Alonso*/, puntos: [2, 3, 2, null, 3, null, null, null, null], comentarios: ["↪️↩️(6,5)", "↩️ (6,6)", "↩️↪️ (6,5)", "No convocado", "↩️↪️ (6,7)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 8"/*Nico*/, puntos: [5, 4, 6, 7, 3, null, null, null, null], comentarios: ["↪️↩️ (7,1)", "↪️ (6,8)", "↪️↩️ (7,3)", "↪️ (7,4)", "↪️↩️ (6,7)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 9"/*Javi*/, puntos: [3, 1, 4, 4, 3, null, null, null, null], comentarios: ["↩️↪️↩️ (6,7)", "🟨↩️↪️ (6,3)", "↩️↪️ (6,8)", "↩️↪️↩️↪️↩️ (6,9)", "↩️↪️↩️ (6,7)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 10"/*Diego*/, puntos: [3, 2, 5, 2, 1, null, null, null, null], comentarios: ["(6,6)", "(6,5)", "(7,0)", "(6,5)", "(6,2)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 11"/*Numan*/, puntos: [2, -1, 1, 2, null, null, null, null, null], comentarios: ["↩️↪️ (6,4)", "↩️ (5,9)", "↪️↩️↪️↩️(6,3)", "↩️↪️↩️ (6,5)", "-", "-", "-", "-", "-"] },
+    { nombre: "Jugador 12"/*Gonzalo*/, puntos: [3, 3, 3, 3, 2, null, null, null, null], comentarios: ["↪️↩️ (6,7)", "↪️↩️ (6,7)", "↩️ (6,7)", "↪️↩️↪️ (6,7)", "↪️ (6,4)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 13"/*Leo*/, puntos: [3, null, 5, null, 4, null, null, null, null], comentarios: ["↩️↪️↩️ (6,7)", "No convocado", "↪️↩️ (7,0)", "No convocado", "↪️↩️ (6,8)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 14"/*Unai (A7A)*/, puntos: [null, null, null, 4, null, null, null, null, null], comentarios: ["En el A7A", "En el A7A", "En el A7A", "↩️↪️↩️ (6,9)", "En el A7A", "-", "-", "-", "-"] },
+    { nombre: "Jugador 15"/*Íñigo*/, puntos: [5, 4, 4, 3, 3, null, null, null, null], comentarios: ["↪️↩️↪️ (7,0)", "↪️ (6,8)", "↩️ (6,9)", "↪️↩️↪️ (6,7)", "↪️↩️➡️ (6,4+➡️)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 16"/*Lucas G.*/, puntos: [4, 2, 4, 2, 4, null, null, null, null], comentarios: ["↪️↩️↪️ (6,8)", "↪️ (6,5)", "↪️ (6,8)", "↪️↩️↪️↩️ (6,4)", "↪️↩️ (6,8)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 17"/*Hugo*/, puntos: [1, 0, null, null, -1, null, null, null, null], comentarios: ["↩️↪️↩️(6,2)", "↩️ (6,0)", "-", "No convocado", "↩️↪️ (5,8)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 18"/*Mario*/, puntos: [2, 2, 2, 1, 2, null, null, null, null], comentarios: ["↪️↩️ (6,4)", "↪️ (6,4)", "↪️↩️↪️ (6,4)", "↪️↩️↪️ (6,3)", "↩️ (6,5)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 19"/*David (A7A)*/, puntos: [null, null, null, 6, null, null, null, null, null], comentarios: ["En el A7A", "En el A7A", "En el A7A", "↩️↪️↩️ (7,2)", "En el A7A", "-", "-", "-", "-"] },
+    { nombre: "Jugador 20"/*Lucas O.*/, puntos: [3, 6, 12, 4, 3, null, null, null, null], comentarios: ["↪️ (6,6)", "↪️ (7,3)", "🟨🟢⬆️ (7,8+🟢⬆️)", "(6,8)", "↪️↩️ (6,7)", "-", "-", "-", "-"] },
+    { nombre: "Jugador 21"/*Jorge*/, puntos: [null, null, null, null, 2, null, null, null, null], comentarios: ["No convocado", "- ↩️", "-", "No convocado", "↩️↪️ (6,4)", "-", "-", "-", "-"] }
+  ];
+
+  // Función para mostrar los datos en la tabla
+  function mostrarJugadores() {
+    const tabla = document.getElementById("tablaJornadas");
+    jugadores[0].puntos.forEach((_, jornada) => {
+      const fila = `<tr>
+                <td>${jornada + 1}</td>
+                ${jugadores.map(jugador => `
+                    <td>${jugador.puntos[jornada] !== null ? jugador.puntos[jornada] : ''}</td>
+                    <td>${jugador.comentarios[jornada]}</td>
+                `).join('')}
+            </tr>`;
+      tabla.innerHTML += fila;
+    });
+
+    // Calcular totales y medias
+    const totales = jugadores.map(jugador => calcularTotal(jugador.puntos));
+    const medias = jugadores.map(jugador => calcularMedia(jugador.puntos));
+
+    // Mostrar totales
+    const totalRow = document.querySelector('.total');
+    totalRow.innerHTML = `<td><strong>Total</strong></td>` +
+      totales.map(total => `<td>${total}</td><td></td>`).join('');
+
+    // Mostrar medias
+    const mediaRow = document.querySelector('.media');
+    mediaRow.innerHTML = `<td><strong>Media</strong></td>` +
+      medias.map(media => `<td>${media}</td><td></td>`).join('');
+  }
+
+  // Función para calcular la suma total de los puntos
+  function calcularTotal(puntos) {
+    return puntos.reduce((acc, punto) => acc + (punto !== null ? punto : 0), 0);
+  }
+
+  // Función para calcular la media de los puntos
+  function calcularMedia(puntos) {
+    const total = calcularTotal(puntos);
+    const cantidadValida = puntos.filter(punto => punto !== null).length;
+    return cantidadValida > 0 ? (total / cantidadValida).toFixed(2) : 'N/A';
+  }
+
+  // Mostrar jugadores al cargar la página
+  window.onload = mostrarJugadores;
+</script>
+
+</body>
+</html>
