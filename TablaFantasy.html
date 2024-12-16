@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale: 1.0, maximum scale=1.0, minimum scale=1.0">
-  <title>Fantasy EFMO</title>
-  <style>
-    body {
-      background-color: rgb(245, 255, 255);
-      font-family: Arial, sans-serif; }
-    .container { max-width: 1200px;}
-    table {
-      width: 100%; border-collapse: collapse; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    .total { background-color: #f0f0f0; font-weight: bold; }
-    .media { background-color: #e0e0e0; font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale: 1.0, maximum scale=1.0, minimum scale=1.0">
+    <title>Fantasy EFMO</title>
+    <style>
+        body {
+            background-color: rgb(245, 255, 255);
+            font-family: Arial, sans-serif;
+        }
+        .container { max-width: 1200px;}
+        table {
+            width: 100%; border-collapse: collapse;
+        }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+        .total { background-color: #f0f0f0; font-weight: bold; }
+        .media { background-color: #e0e0e0; font-weight: bold; }
+        .rojo { background-color: #f8d7da; }
+        .gris { background-color: #d6d6d6; }
+        .amarillo { background-color: #fff3cd; }
+        .verde { background-color: #d4edda; }
+        .azul { background-color: #d1ecf1; }
+    </style>
 </head>
-<body>
-
-<div class="container">
-  <h1>Puntos y valoración de los partidos temp. 24/25</h1>
-  <table>
-    <thead>
     <tr>
       <th>Jornada</th>
       <th colspan="2">Edu</th>
@@ -131,50 +132,57 @@
     { nombre: "Jugador 20"/*Lucas O.*/, puntos: [3, 6, 12, 4, 3, 4, 2, 7, 8, null], comentarios: ["↪️ (6,6)", "↪️ (7,3)", "🟨🟢⬆️ (7,8+🟢⬆️)", "(6,8)", "↪️↩️ (6,7)", "↪️↩️ (6,8)", "↩️↪️↩️ (6,5)", "🟢⬆️ (6,9+🟢⬆️)", "➡️(7,4+➡️)", "-"] },
     { nombre: "Jugador 21"/*Jorge*/, puntos: [null, null, null, null, 2, 1, 1, null, 2, null], comentarios: ["No convocado", "- ↩️", "-", "No convocado", "↩️↪️ (6,4)", "↩️↪️ (6,3)", "↪️↩️↪️ (6,3)", "No convocado", "↩️ (6,4)", "-"] }
   ];
-
-  // Función para mostrar los datos en la tabla
-  function mostrarJugadores() {
-    const tabla = document.getElementById("tablaJornadas");
-    jugadores[0].puntos.forEach((_, jornada) => {
-      const fila = `<tr>
+    // Función para mostrar los datos en la tabla
+    function mostrarJugadores() {
+        const tabla = document.getElementById("tablaJornadas");
+        jugadores[0].puntos.forEach((_, jornada) => {
+            const fila = `<tr>
                 <td>${jornada + 1}</td>
-                ${jugadores.map(jugador => `
-                    <td>${jugador.puntos[jornada] !== null ? jugador.puntos[jornada] : ''}</td>
-                    <td>${jugador.comentarios[jornada]}</td>
-                `).join('')}
+                ${jugadores.map(jugador => {
+                const puntos = jugador.puntos[jornada];
+                let color = '';
+                if (puntos === null || puntos === 0 || puntos === '-') {
+                    color = 'gris';
+                } else if (puntos < 0) {
+                    color = 'rojo';
+                } else if (puntos >= 1 && puntos <= 4) {
+                    color = 'amarillo';
+                } else if (puntos >= 5 && puntos <= 9) {
+                    color = 'verde';
+                } else if (puntos >= 10) {
+                    color = 'azul';
+                }
+                return `<td class="${color}">${puntos !== null ? puntos : ''}</td><td>${jugador.comentarios[jornada]}</td>`;
+            }).join('')}
             </tr>`;
-      tabla.innerHTML += fila;
-    });
+            tabla.innerHTML += fila;
+        });
 
-    // Calcular totales y medias
-    const totales = jugadores.map(jugador => calcularTotal(jugador.puntos));
-    const medias = jugadores.map(jugador => calcularMedia(jugador.puntos));
+        // Calcular totales y medias
+        const totales = jugadores.map(jugador => calcularTotal(jugador.puntos));
+        const medias = jugadores.map(jugador => calcularMedia(jugador.puntos));
 
-    // Mostrar totales
-    const totalRow = document.querySelector('.total');
-    totalRow.innerHTML = `<td><strong>Total</strong></td>` +
-      totales.map(total => `<td>${total}</td><td></td>`).join('');
+        // Mostrar totales
+        const totalRow = document.querySelector('.total');
+        totalRow.innerHTML = `<td><strong>Total</strong></td>` + totales.map(total => `<td>${total}</td><td></td>`).join('');
 
-    // Mostrar medias
-    const mediaRow = document.querySelector('.media');
-    mediaRow.innerHTML = `<td><strong>Media</strong></td>` +
-      medias.map(media => `<td>${media}</td><td></td>`).join('');
-  }
+        // Mostrar medias
+        const mediaRow = document.querySelector('.media');
+        mediaRow.innerHTML = `<td><strong>Media</strong></td>` + medias.map(media => `<td>${media}</td><td></td>`).join('');
+    }
 
-  // Función para calcular la suma total de los puntos
-  function calcularTotal(puntos) {
-    return puntos.reduce((acc, punto) => acc + (punto !== null ? punto : 0), 0);
-  }
+    function calcularTotal(puntos) {
+        return puntos.reduce((acc, punto) => acc + (punto !== null ? punto : 0), 0);
+    }
 
-  // Función para calcular la media de los puntos
-  function calcularMedia(puntos) {
-    const total = calcularTotal(puntos);
-    const cantidadValida = puntos.filter(punto => punto !== null).length;
-    return cantidadValida > 0 ? (total / cantidadValida).toFixed(2) : 'N/A';
-  }
+    function calcularMedia(puntos) {
+        const total = calcularTotal(puntos);
+        const cantidadValida = puntos.filter(punto => punto !== null).length;
+        return cantidadValida > 0 ? (total / cantidadValida).toFixed(2) : 'N/A';
+    }
 
-  // Mostrar jugadores al cargar la página
-  window.onload = mostrarJugadores;
+    // Mostrar jugadores al cargar la página
+    window.onload = mostrarJugadores;
 </script>
 
 </body>
