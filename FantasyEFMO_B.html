@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fantasy EFMO</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: rgb(237, 255, 255);
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      width: 80%;
+      margin: 20px auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .player-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .player-item {
+      background-color: rgb(249, 255, 255);
+      border-radius: 8px;
+      margin-bottom: 15px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .player-item:hover {
+      transform: scale(1.03);
+    }
+    .player-name {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+    .player-stats {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .player-stats div {
+      text-align: center;
+      width: 50px;
+      padding: 5px;
+      border-radius: 5px;
+      color: black;
+    }
+    .total-points {
+      font-size: 16px;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+    .player-details {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .detail-item {
+      display: flex;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 5px;
+    }
+    .detail-item span {
+      width: 70px;
+      text-align: center;
+    }
+    .red { background-color: #ff3200; }
+    .gray { background-color: #d6d6d6; }
+    .yellow { background-color: #ffff42; }
+    .green { background-color: #23d750; }
+    .blue { background-color: #4bffff; }
+
+    @media (max-width: 768px) {
+      /* Puntuaciones */
+      .score {
+        font-size: 22px; /* Aumenta el tamaño de las puntuaciones en móviles */
+      }
+
+      /* Comentarios */
+      .detail-item {
+        font-size: 16px; /* Aumenta el tamaño de los comentarios */
+      }
+
+      /* Número de jornada (si tienes esta información) */
+      .player-name {
+        font-size: 22px; /* Aumenta el tamaño del nombre de los jugadores si es necesario */
+      }
+
+      .total-points {
+        font-size: 18px; /* Aumenta el tamaño de los puntos totales y la media */
+      }
+    }
+
+
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Fantasy EFMO</h1>
+  <ul class="player-list">
+    <li class="player-item" onclick="toggleDetails('player1')" id="player1-item">
+      <div class="player-name">Edu</div>
+      <div class="player-stats" id="player1-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player1-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player1" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player2')" id="player2-item">
+      <div class="player-name">Miguel</div>
+      <div class="player-stats" id="player2-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player2-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player2" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player3')" id="player3-item">
+      <div class="player-name">Rodri (AC)</div>
+      <div class="player-stats" id="player3-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player3-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player3" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player4')" id="player4-item">
+      <div class="player-name">Pablo</div>
+      <div class="player-stats" id="player4-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player4-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player4" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player5')" id="player5-item">
+      <div class="player-name">Yago</div>
+      <div class="player-stats" id="player5-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player5-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player5" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player6')" id="player6-item">
+      <div class="player-name">Alonso</div>
+      <div class="player-stats" id="player6-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player6-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player6" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player7')" id="player7-item">
+      <div class="player-name">Javi</div>
+      <div class="player-stats" id="player7-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player7-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player7" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player8')" id="player8-item">
+      <div class="player-name">Lucas S.</div>
+      <div class="player-stats" id="player8-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player8-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player8" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player9')" id="player9-item">
+      <div class="player-name">Mario</div>
+      <div class="player-stats" id="player9-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player9-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player9" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player10')" id="player10-item">
+      <div class="player-name">Nico</div>
+      <div class="player-stats" id="player10-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player10-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player10" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player11')" id="player11-item">
+      <div class="player-name">Unai (A7A)</div>
+      <div class="player-stats" id="player11-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player11-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player11" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player12')" id="player12-item">
+      <div class="player-name">Numan</div>
+      <div class="player-stats" id="player12-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player12-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player12" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player13')" id="player13-item">
+      <div class="player-name">Gonzalo</div>
+      <div class="player-stats" id="player13-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player13-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player13" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player14')" id="player14-item">
+      <div class="player-name">Íñigo</div>
+      <div class="player-stats" id="player14-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player14-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player14" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player15')" id="player15-item">
+      <div class="player-name">Leo</div>
+      <div class="player-stats" id="player15-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player15-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player15" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player16')" id="player16-item">
+      <div class="player-name">Diego</div>
+      <div class="player-stats" id="player16-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player16-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player16" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player17')" id="player17-item">
+      <div class="player-name">Lucas G.</div>
+      <div class="player-stats" id="player17-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player17-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player17" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player18')" id="player18-item">
+      <div class="player-name">Hugo</div>
+      <div class="player-stats" id="player18-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player18-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player18" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player19')" id="player19-item">
+      <div class="player-name">Rodri (A7A)</div>
+      <div class="player-stats" id="player19-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player19-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player19" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player20')" id="player20-item">
+      <div class="player-name">David (A7A)</div>
+      <div class="player-stats" id="player20-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player20-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player20" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+
+    <li class="player-item" onclick="toggleDetails('player21')" id="player21-item">
+      <div class="player-name">Lucas O.</div>
+      <div class="player-stats" id="player21-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player21-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player21" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+    <li class="player-item" onclick="toggleDetails('player22')" id="player22-item">
+      <div class="player-name">Jorge</div>
+      <div class="player-stats" id="player22-stats">
+        <!-- Se mostrarán las últimas 3 puntuaciones -->
+      </div>
+      <div class="total-points" id="player22-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player22" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+        <!-- Aquí se mostrarán todas las puntuaciones -->
+      </div>
+    </li>
+    <!--
+    <li class="player-item" onclick="toggleDetails('player23')" id="player23-item">
+      <div class="player-name">Elo</div>
+      <div class="player-stats" id="player23-stats">
+
+      </div>
+      <div class="total-points" id="player23-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player23" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+      </div>
+    </li>
+    <li class="player-item" onclick="toggleDetails('player24')" id="player24-item">
+      <div class="player-name">David</div>
+      <div class="player-stats" id="player24-stats">
+
+      </div>
+      <div class="total-points" id="player24-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player24" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+      </div>
+    </li>
+    <li class="player-item" onclick="toggleDetails('player25')" id="player25-item">
+      <div class="player-name">Kebe (CB)</div>
+      <div class="player-stats" id="player25-stats">
+
+      </div>
+      <div class="total-points" id="player25-total">Total: 0 puntos - Media: 0.00</div>
+      <div id="player25" class="player-details">
+        <h3>Puntuaciones Detalladas</h3>
+      </div>
+    </li> -->
+  </ul>
+</div>
+<script>
+  // Datos de jugadores con 15 puntuaciones y comentarios
+  const players = [
+    {
+      id: 'player1',
+      name: 'Edu',
+      scores: [null, 5, 5, 6, 3, 6, 4, -2, null, 6, null, 4, 3, 4],
+      comments: [
+        "No convocado", "↩️ (7,1)", "↪️ (7,1)", "↩️ (7,3)", "↩️ (6,6)", "↪️ (7,4)", "↩️ (6,9)", "🟥↪️ (6,8+🟥)",
+        "Sancionado", "↪️ (7,2)", "-", "↪️ (6,9)", "↩️ (6,7)", "↪️ (6,9)"
+      ]
+    },
+    {
+      id: 'player2',
+      name: 'Miguel',
+      scores: [4, 5, 6, 6, 4, -1, 4, 1, 3, 6, null, 5, 4, 8,],
+      comments: [
+        "(6,8)", "↪️ (7,0)", "↩️ (7,2)", "↪️ (7,2)", "↪️ (6,9)", "↩️ (5,9)", "↪️ (6,8)", "↩️ (6,2)",
+        "↪️ (6,7)", "↩️ (7,2)", "-", "↩️ (7,1)", "↪️ (6,8)", "↩️ (7,6)"
+      ]
+    },
+    {
+      id: 'player3',
+      name: 'Rodri (AC)',
+      scores: [null, null, null, null, null, null, null, null, 5, null, null, null, null, null],
+      comments: [
+        "-", "No convocado", "No convocado", "No convocado", "No convocado", "No convocado", "No convocado", "No convocado",
+        "↩️ (7,0)", "No convocado", "No convocado", "No convocado", "En el AC", "En el AC"
+      ]
+    },
+    {
+      id: 'player4',
+      name: 'Pablo',
+      scores: [5, 7, 10, 3, 4, 7, 7, 6, 5, 7, null, 6, 3, 9],
+      comments: [
+        "↪️ (7,1)", "(7,4)", "↪️↩️ (8,1)", "(6,7)", "(6,9)", "(7,5)", "(7,5)", "(7,3)",
+        "(7,1)", "(7,4)", "-", "(7,2)", "(6,7)", "(7,9)"
+      ]
+    },
+    {
+      id: 'player5',
+      name: 'Yago',
+      scores: [4, 5, 3, 5, 3, 6, null, 3, 6, 2, null, 6, null, null],
+      comments: [
+        "🟨↩️ (6,9)", "(7,0)", "↪️↩️ (6,7)", "↪️↩️ (7,1)", "↪️↩️ (6,7)", "↪️ (7,3)", "-", "↪️ (6,7)",
+        "(7,3)", "🟨 (6,5)", "-", "↪️ (7,3)", "No convocado", "No convocado"
+      ]
+    },
+    {
+      id: 'player6',
+      name: 'Alonso',
+      scores: [2, 3, 2, null, 3, 1, 5, 3, 2, 1, null, 3, 2, null],
+      comments: [
+        "↪️↩️(6,5)", "↩️ (6,6)", "↩️↪️ (6,5)", "No convocado", "↩️↪️ (6,7)", "↩️↪️↩️ (6,2)", "↪️↩️↪️ (7,1)", "↩️↪️ (6,7)",
+        "↩️↪️ (6,4)", "↩️↪️↩️↪️ (6,3)", "-", "↪️↩️🔴 (6,6)", "↪️↩️ (6,4)", "No convocado"
+      ]
+    },
+    {
+      id: 'player7',
+      name: 'Javi',
+      scores: [3, 1, 4, 4, 3, 2, 5, 2, 4, 5, null, 2, 3, 4],
+      comments: [
+        "↩️↪️↩️ (6,7)", "🟨↩️↪️ (6,3)", "↩️↪️ (6,8)", "↩️↪️↩️↪️↩️ (6,9)", "↩️↪️↩️ (6,7)", "↩️↪️↩️ (6,4)", "(7,1)", "↩️↪️↩️ (6,5)",
+        "↪️↩️↪️ (6,9)", "🟨↪️↩️↪️ (7,0)", "-", "↩️↪️ (6,4)", "↪️ (6,7)", "↪️↩️↪️↩️ (6,8)"
+      ]
+    },
+    {
+      id: 'player8',
+      name: 'Lucas S.',
+      scores: [4, 6, 5, 6, 12, 6, 5, 5, 7, 5, null, 5, 5, 5],
+      comments: [
+        "(6,8)", "(7,2)", "↪️ (7,0)", "↪️↩️ (7,3)", "🟨↪️↩️🟢 (7,4+🟢)", "↪️↩️ (7,4)", "(7,1)", "↪️↩️ (7,1)",
+        "(7,4)", "↪️↩️ (7,0)", "-", "↩️ (7,0)", "↩️ (7,0)", "↪️↩️↪️ (7,0)"
+      ]
+    },
+    {
+      id: 'player9',
+      name: 'Mario',
+      scores: [2, 2, 2, 1, 2, 2, 1, 2, 2, 3, null, 5, 1, 4],
+      comments: [
+        "↪️↩️ (6,4)", "↪️ (6,4)", "↪️↩️↪️ (6,4)", "↪️↩️↪️ (6,3)", "↩️ (6,5)", "↩️↪️ (6,5)", "↩️↪️↩️↪️ (6,3)", "↪️↩️ (6,5)",
+        "↩️↪️ (6,4)", "↩️↪️↩️ (6,7)", "-", "↪️↩️ (7,1)", "↪️↩️↪️↩️ (6,3)", "↪️↩️ (6,8)"
+      ]
+    },
+    {
+      id: 'player10',
+      name: 'Nico',
+      scores: [5, 4, 6, 7, 3, 2, 4, 6, 7, 8, null, 6, 6, 7],
+      comments: [
+        "↪️↩️ (7,1)", "↪️ (6,8)", "↪️↩️ (7,3)", "↪️ (7,4)", "↪️↩️ (6,7)", "↪️↩️ (6,5)", "↩️↪️↩️ (6,9)", "↪️↩️ (7,3)",
+        "(7,4)", "↪️↩️ (7,6)", "-", "(7,3)", "(7,3)", "🟨➡️ (7,3+➡️)"
+      ]
+    },
+    {
+      id: 'player11',
+      name: 'Unai (A7A)',
+      scores: [null, null, null, 4, null, null, 6, 10, null, null, null, null, null, 5],
+      comments: [
+        "En el A7A", "En el A7A", "En el A7A", "↩️↪️↩️ (6,9)", "En el A7A", "En el A7A", "↪️↩️ (7,2)", "↩️↪️🟢 (7,3+🟢)",
+        "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A", "↩️ (7,1)"
+      ]
+    },
+    {
+      id: 'player12',
+      name: 'Numan',
+      scores: [2, -1, 1, 2, null, 1, 2, 1, null, 2, null, null, null, 2],
+      comments: [
+        "↩️↪️ (6,4)", "↩️ (5,9)", "↪️↩️↪️↩️(6,3)", "↩️↪️↩️ (6,5)", "-", "↪️↩️↪️ (6,3)", "↪️↩️↪️ (6,5)", "↩️↪️ (6,3)",
+        "-", "↩️↪️ (6,5)", "-", "No convocado", "No convocado", "↩️↪️ (6,5)"
+      ]
+    },
+    {
+      id: 'player13',
+      name: 'Gonzalo',
+      scores: [3, 3, 3, 3, 2, 2, 3, 6, 11, 4, null, 4, 2, 4],
+      comments: [
+        "↪️↩️ (6,7)", "↪️↩️ (6,7)", "↩️ (6,7)", "↪️↩️↪️ (6,7)", "↪️ (6,4)", "(6,5)", "↩️↪️↩️ (6,7)", "↪️↩️➡️ (7,0+➡️)",
+        "🟢 (7,4+🟢)", "↪️↩️ (6,8)", "-", "↪️ (6,8)", "↪️↩️ (6,4)", "↪️↩️ (6,8)"
+      ]
+    },
+    {
+      id: 'player14',
+      name: 'Íñigo',
+      scores: [5, 4, 4, 3, 3, null, 2, 2, 9, 6, null, 5, 7, 6],
+      comments: [
+        "↪️↩️↪️ (7,0)", "↪️ (6,8)", "↩️ (6,9)", "↪️↩️↪️ (6,7)", "↪️↩️➡️ (6,4+➡️)", "No convocado", "↩️↪️↩️ (6,5)", "↪️↩️ (6,4)",
+        "(7,8)", "(7,2)", "-", "(7,1)", "➡️ (7,2+➡️)", "(7,3)"
+      ]
+    },
+    {
+      id: 'player15',
+      name: 'Leo',
+      scores: [3, null, 5, null, 4, 4, null, 2, null, null, null, null, null, null],
+      comments: [
+        "↩️↪️↩️ (6,7)", "No convocado", "↪️↩️ (7,0)", "No convocado", "↪️↩️ (6,8)", "↪️ (6,9)", "No convocado", "↩️↪️ (6,4)",
+        "No convocado", "No convocado", "No convocado", "No convocado", "No convocado", "No convocado"
+      ]
+    },
+    {
+      id: 'player16',
+      name: 'Diego',
+      scores: [3, 2, 5, 2, 1, 2, 5, 2, 5, 3, null, 4, 8, 17],
+      comments: [
+        "(6,6)", "(6,5)", "(7,0)", "(6,5)", "(6,2)", "(6,4)", "(7,1)", "(6,5)",
+        "(7,1)", "(6,6)", "-", "(6,9)", "🟢 (6,9+🟢)", "🟢🟢 (7,9+🟢🟢)"
+      ]
+    },
+    {
+      id: 'player17',
+      name: 'Lucas G.',
+      scores: [4, 2, 4, 2, 4, 3, 3, 7, 4, 9, null, 3, 4, 4],
+      comments: [
+        "↪️↩️↪️ (6,8)", "↪️ (6,5)", "↪️ (6,8)", "↪️↩️↪️↩️ (6,4)", "↪️↩️ (6,8)", "↪️↩️ (6,6)", "↪️↩️↪️ (6,6)", "🟨↪️↩️ (7,4)",
+        "↪️↩️↪️ (6,9)", "↪️↩️🟢⬆️ (7,2+🟢⬆️)", "-", "↪️↩️↪️ (6,7)", "↪️↩️ (6,8)", "🟨↪️↩️ (6,9)"
+      ]
+    },
+    {
+      id: 'player18',
+      name: 'Hugo',
+      scores: [1, 0, null, null, -1, 0, null, null, 1, 2, null, 3, 7, null, null],
+      comments: [
+        "↩️↪️↩️(6,2)", "↩️ (6,0)", "-", "No convocado", "↩️↪️ (5,8)", "↩️↪️↩️(6,1)", "No convocado", "No convocado",
+        "↩️ (6,3)", "↩️↪️ (6,5)", "-", "↩️↪️↩️ (6,6)", "↩️↪️🟢 (6,8+🟢)", "No convocado"
+      ]
+    },
+    {
+      id: 'player19',
+      name: 'Rodri (A7A)',
+      scores: [null, null, null, null, null, null, null, null, null, null, null, null, null, 5],
+      comments: [
+        "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A",
+        "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A", "↩️↪️ (7,1)"
+      ]
+    },
+    {
+      id: 'player20',
+      name: 'David (A7A)',
+      scores: [null, null, null, 6, null, null, 4, 2, null, null, null, null, null, 9],
+      comments: [
+        "En el A7A", "En el A7A", "En el A7A", "↩️↪️↩️ (7,2)", "En el A7A", "En el A7A", "↪️↩️ (6,9)", "↩️↪️↩️(6,4)",
+        "En el A7A", "En el A7A", "En el A7A", "En el A7A", "En el A7A", "↩️➡️ (7,6+➡️)"
+      ]
+    },
+    {
+      id: 'player21',
+      name: 'Lucas O.',
+      scores: [3, 6, 12, 4, 3, 4, 2, 7, 8, 2, null, 3, 3, 4],
+      comments: [
+        "↪️ (6,6)", "↪️ (7,3)", "🟨🟢⬆️ (7,8+🟢⬆️)", "(6,8)", "↪️↩️ (6,7)", "↪️↩️ (6,8)", "↩️↪️↩️ (6,5)", "🟢⬆️ (6,9+🟢⬆️)",
+        "➡️ (7,4+➡️)", "↪️↩️ (6,4)", "-", "(6,7)", "↪️↩️ (6,7)", "↪️ (6,8)"
+      ]
+    },
+    {
+      id: 'player22',
+      name: 'Jorge',
+      scores: [null, null, null, null, 2, 1, 1, null, 2, 2, null, null, 3, null],
+      comments: [
+        "No convocado", "- ↩️", "-", "No convocado", "↩️↪️ (6,4)", "↩️↪️ (6,3)", "↪️↩️↪️ (6,3)", "No convocado",
+        "↩️ (6,4)", "↩️↪️ (6,4)", "-", "-", "↩️↪️ (6,7)", "No convocado"
+      ]
+    },/*
+    {
+      id: 'player23',
+      name: 'Elo',
+      scores: [2, -2, 9, null, 1, null, 1, 4, 3, 2, 3, 3, 1, 12, 8, 5],
+      comments: [
+        "(6,4)", "↪️ (5,6)", "↩️🟢 (7,3+🟢)", "Descanso", "🟨↩️ (6,3)", "No convocado", "↩️ (6,3)", "↩️ (6,8)",
+        "🟨🟢 (6,0+🟢)", "↪️ (6,4)", "↪️ (6,7)", "↪️ (6,6)", "(6,2)", "↪️🟢 (7,8+🟢)", "↪️🟢 (7,0+🟢)", "↪️ (7,1)"
+      ]
+    },
+    {
+      id: 'player24',
+      name: 'David',
+      scores: [1, 2, null, null, null, 0, 2, null, null, null, null, null, null, 3, 2, 2],
+      comments: [
+        "↩️ (6,3)", "↩️ (6,4)", "- ↩️", "Descanso", "Lesionado", "↩️ (6,0)", "↩️ (6,4)", "- ↩️",
+        "-", "-", "No conovcado", "No convocado", "No convocado", "↩️ (6,7)", "↩️ (6,5)", "↩️ (6,5)"
+      ]
+    },
+    {
+      id: 'player25',
+      name: 'Kebe (CB)',
+      scores: [null, null, null, null, null, null, null, null, null, null, 8, null, null, null, null, null],
+      comments: [
+        "En el CB", "En el CB", "En el CB", "Descanso", "En el CB", "En el CB", "En el CB", "En el CB",
+        "En el CB", "En el CB", "↩️🟢(7,1+🟢)", "En el CB", "En el CB", "En el CB", "En el CB", "En el CB"
+      ]
+    }*/
+  ];
+
+
+  // Función para calcular los puntos totales y la media
+  function calculatePlayerStats(player) {
+    const scores = player.scores;
+    let totalPoints = 0;
+    let validScores = 0;
+
+    // Calcular total de puntos y cantidad de puntuaciones válidas
+    scores.forEach(score => {
+      if (score !== null) {
+        totalPoints += score;
+        validScores++;
+      }
+    });
+
+    // Calcular media de los puntos válidos
+    const averagePoints = validScores > 0 ? (totalPoints / validScores).toFixed(2) : 0;
+
+    return { totalPoints, averagePoints };
+  }
+
+  // Función para obtener el color de la puntuación
+  function getScoreColor(score) {
+    if (score < 0) return 'red';
+    if (score === 0 || score === null) return 'gray';
+    if (score >= 1 && score <= 4) return 'yellow';
+    if (score >= 5 && score <= 9) return 'green';
+    if (score >= 10) return 'blue';
+  }
+  // Mostrar las puntuaciones (últimas 3) y los cálculos en la vista principal
+  function displayPlayerStats(player) {
+    const { totalPoints, averagePoints } = calculatePlayerStats(player);
+    const playerItem = document.getElementById(`${player.id}-item`);
+    const playerStats = document.getElementById(`${player.id}-stats`);
+    const playerTotal = document.getElementById(`${player.id}-total`);
+
+    // Mostrar puntos totales y media
+    /* playerTotal.innerText = `Total: ${totalPoints} puntos - Media: ${averagePoints}`; */
+
+    // Mostrar puntos totales y media
+    playerTotal.innerHTML = `Total: ${totalPoints} puntos`; // Solo el total de puntos
+    const playerAverage = document.createElement('div'); // Crear un nuevo div para la media
+    playerAverage.classList.add('average-points'); // Añadir una clase para aplicar estilo
+    playerAverage.innerText = `Media: ${averagePoints}`; // Asignar la media de puntos
+    // Añadir la media debajo del total de puntos
+    playerTotal.appendChild(playerAverage);
+
+    // Mostrar las últimas 3 puntuaciones
+    playerStats.innerHTML = '';
+    const lastThreeScores = player.scores.slice(-3); // Últimas 3 puntuaciones
+    lastThreeScores.forEach((score, index) => {
+      const scoreDiv = document.createElement('div');
+      scoreDiv.classList.add('score', getScoreColor(score));
+      scoreDiv.innerText = score === null ? '-' : score;
+      playerStats.appendChild(scoreDiv);
+    });
+
+    // Mostrar todas las puntuaciones en la sección detallada con comentarios
+    const playerDetails = document.getElementById(player.id);
+    playerDetails.innerHTML = '';
+    player.scores.forEach((score, index) => {
+      const detailItem = document.createElement('div');
+      detailItem.classList.add('detail-item', getScoreColor(score));
+      detailItem.innerHTML = `<span>J${index + 1}</span>  <span>${score === null ? '-' : score}</span>  ${player.comments[index]}`; // Mostrar la jornada y el comentario
+      playerDetails.appendChild(detailItem);
+    });
+  }
+  // Mostrar detalles de cada jugador al hacer clic
+  function toggleDetails(playerId) {
+    const playerDetails = document.getElementById(playerId);
+    playerDetails.style.display = (playerDetails.style.display === "block") ? "none" : "block";
+  }
+
+  // Inicializar las estadísticas de los jugadores
+  players.forEach(player => {
+    displayPlayerStats(player);
+  });
+
+  // Mostrar las jornadas
+
+</script>
+
+</body>
+</html>
